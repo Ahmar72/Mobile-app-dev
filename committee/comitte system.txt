@@ -1,0 +1,87 @@
+import 'dart:math';
+
+class QamytiSystem {
+  List<String> members = []; // List of members
+  Map<String, double> contributions = {}; // Stores contributions of each member
+  double monthlyContribution = 1000; // Each member contributes this amount
+  int totalMonths = 12; // Total duration
+
+  // Add a member to the Qamyti
+  void addMember(String name) {
+    if (!members.contains(name)) {
+      members.add(name);
+      contributions[name] = 0; // Initialize contribution
+      print("Member '$name' added successfully!");
+    } else {
+      print("Member '$name' is already in the Qamyti.");
+    }
+  }
+
+  // Show total members
+  void showTotalMembers() {
+    print("Total Members: ${members.length}");
+    print("Members List: ${members.join(', ')}");
+  }
+
+  // Calculate total Qamyti amount
+  double getTotalQamyti() {
+    return members.length * monthlyContribution * totalMonths;
+  }
+
+  // Run Qamyti for 12 months and randomly select a winner each month
+  void startQamyti() {
+    if (members.length < 2) {
+      print("Not enough members to start Qamyti. Add more members.");
+      return;
+    }
+
+    List<String> availableMembers = List.from(members);
+    Random random = Random();
+
+    print("\nStarting Qamyti Process...\n");
+
+    for (int month = 1; month <= totalMonths; month++) {
+      if (availableMembers.isEmpty) {
+        print("All members have already won once. Restarting the selection.");
+        availableMembers = List.from(members);
+      }
+
+      // Select a random winner
+      int winnerIndex = random.nextInt(availableMembers.length);
+      String winner = availableMembers[winnerIndex];
+
+      // Remove winner from the available list (ensures fairness)
+      availableMembers.removeAt(winnerIndex);
+
+      // Add contribution for each member
+      for (var member in members) {
+        contributions[member] = (contributions[member] ?? 0) + monthlyContribution;
+      }
+
+      // Display month-wise results
+      print("Month $month: Winner is '$winner' who receives ${members.length * monthlyContribution} Qamyti.");
+    }
+
+    print("\nQamyti Completed!");
+  }
+}
+
+void main() {
+  QamytiSystem qamyti = QamytiSystem();
+
+  // Adding members
+  qamyti.addMember("Ali");
+  qamyti.addMember("Ayesha");
+  qamyti.addMember("Hassan");
+  qamyti.addMember("Fatima");
+  qamyti.addMember("Zain");
+
+  // Display total members
+  qamyti.showTotalMembers();
+
+  // Show total Qamyti amount
+  print("Total Qamyti Amount: ${qamyti.getTotalQamyti()}");
+
+  // Start the Qamyti process
+  qamyti.startQamyti();
+}
