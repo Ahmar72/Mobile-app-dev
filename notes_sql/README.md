@@ -3,7 +3,10 @@
 A new Flutter project.
 
 ## Getting Started
-
+<img src="screenshots/img_1.jpg">
+<img src="screenshots/img_2.jpg">
+<img src="screenshots/img_3.jpg">
+<img src="screenshots/img_4.jpg">
 This project is a starting point for a Flutter application.
 
 A few resources to get you started if this is your first Flutter project:
