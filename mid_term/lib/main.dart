@@ -1216,7 +1216,7 @@ class _ComplexityQuizPageState extends State<ComplexityQuizPage> {
                   child: Text(option.toString(), style: const TextStyle(fontSize: 18)),
                 ),
               );
-            }).toList(),
+            }),
           ],
         ),
       ),
