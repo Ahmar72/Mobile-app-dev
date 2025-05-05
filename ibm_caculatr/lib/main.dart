@@ -8,12 +8,9 @@ class BMICalculator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: const BMIScreen(),
-      theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: Colors.black,
-        primaryColor: Colors.red,
-      ),
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: BMIScreen(),
     );
   }
 }

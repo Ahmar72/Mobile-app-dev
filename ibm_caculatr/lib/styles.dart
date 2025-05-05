@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'app_colors.dart';
 
-const cardColor = Color(0xFF1D1E33);
-const activeCardColor = Color(0xFF111328);
-const labelStyle = TextStyle(color: Colors.white);
-const valueStyle = TextStyle(
-  color: Colors.white,
-  fontSize: 30,
+const labelStyle = TextStyle(
+  fontSize: 18,
+  color: AppColors.whiteText,
+);
+
+const numberStyle = TextStyle(
+  fontSize: 40,
   fontWeight: FontWeight.bold,
+  color: AppColors.whiteText,
 );
