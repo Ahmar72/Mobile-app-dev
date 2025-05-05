@@ -3,6 +3,7 @@ import 'gender_card.dart';
 import 'card_section.dart';
 import 'app_colors.dart';
 import 'styles.dart';
+import 'result_screen.dart';
 
 enum Gender { male, female }
 
@@ -86,7 +87,11 @@ class _BMIScreenState extends State<BMIScreen> {
             ),
             GestureDetector(
               onTap: () {
-                // calculate BMI logic
+                // Navigate to result screen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ResultScreen()),
+                );
               },
               child: Container(
                 color: AppColors.buttonColor,
