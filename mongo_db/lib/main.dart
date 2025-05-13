@@ -1,8 +1,9 @@
-
 import 'package:flutter/material.dart';
+import 'task_model.dart';
+import 'task_service.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -10,59 +11,89 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
+    return MaterialApp(title: 'Task App', debugShowCheckedModeBanner: false, home: TaskPage());
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-
-
-  final String title;
+class TaskPage extends StatefulWidget {
+  const TaskPage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  _TaskPageState createState() => _TaskPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _TaskPageState extends State<TaskPage> {
+  final _service = TaskService();
+  final _controller = TextEditingController();
+  late Future<List<Task>> _tasks;
 
-  void _incrementCounter() {
+  @override
+  void initState() {
+    super.initState();
+    _tasks = _service.getTasks();
+  }
+
+  void _refreshTasks() {
     setState(() {
-      _counter++;
+      _tasks = _service.getTasks();
     });
+  }
+
+  void _addTask() async {
+    if (_controller.text.trim().isEmpty) return;
+    await _service.createTask(Task(title: _controller.text));
+    _controller.clear();
+    _refreshTasks();
+  }
+
+  void _deleteTask(String id) async {
+    await _service.deleteTask(id);
+    _refreshTasks();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+      appBar: AppBar(title: Text('Tasks')),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(children: [
+              Expanded(
+                child: TextField(
+                  controller: _controller,
+                  decoration: InputDecoration(labelText: 'New Task'),
+                ),
+              ),
+              ElevatedButton(onPressed: _addTask, child: Text('Add'))
+            ]),
+          ),
+          Expanded(
+            child: FutureBuilder<List<Task>>(
+              future: _tasks,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                }
+                final tasks = snapshot.data!;
+                return ListView.builder(
+                  itemCount: tasks.length,
+                  itemBuilder: (_, i) => ListTile(
+                    title: Text(tasks[i].title),
+                    trailing: IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () => _deleteTask(tasks[i].id!),
+                    ),
+                  ),
+                );
+              },
             ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+          ),
+        ],
       ),
     );
   }
